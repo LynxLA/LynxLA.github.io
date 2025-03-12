@@ -7,5 +7,31 @@
   </head>
   <body>
     <h1>Blog</h1>
+    <ul id="index"></ul>
+    <script>
+      const index = document.getElementById("index");
+
+      async function render() {
+        const data = await fetch("./index.json").then((r) => r.json());
+
+        index.innerHTML = data
+          .reverse()
+          .map(({ title, id }) => {
+            const [year, month, date] = id
+              .substring(0, 10)
+              .split("-")
+              .map((i) => Number(i));
+
+            return `<li><a href="./publicaciones/#/${id}">${title}</a> - ${new Date(
+              year,
+              month - 1,
+              date
+            ).toLocaleString("es-MX", { dateStyle: "full" })}</li>`;
+          })
+          .join("");
+      }
+
+      render();
+    </script>
   </body>
 </html>
