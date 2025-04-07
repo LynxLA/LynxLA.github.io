@@ -14,9 +14,21 @@
       import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
       const content = document.getElementById("content");
       async function render() {
+        //Estado de carga
+        content.innerHTML = "Cargando...";
         const post = location.hash.substring(2);
-        const data = await fetch(`./${post}.md`).then((r) => r.text());
+        const res = await fetch(`./${post}.md`);
 
+        //Estado de Error
+        if (!res.ok) {
+          content.innerHTML =
+            res.status === 404
+              ? "No existe la publicación."
+              : "Ocurrió un error.";
+          return;
+        }
+        //Estado chido
+        const data = await res.text();
         content.innerHTML = marked.parse(data);
       }
       window.onhashchange = render;
