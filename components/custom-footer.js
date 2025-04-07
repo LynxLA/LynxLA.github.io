@@ -1,5 +1,5 @@
 const publicationYear = 2025;
-const currentYear = 2028;
+const currentYear = new Date().getFullYear();
 
 class CustomFooter extends HTMLElement {
   connectedCallback() {
