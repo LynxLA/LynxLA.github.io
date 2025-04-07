@@ -9,29 +9,46 @@
   <body>
     <a href="../">Regresar</a>
     <h1>Blog</h1>
-    <ul id="index"></ul>
+    <main id="container">
+      <!-- Estado de carga -->
+      <p>Cargando...</p>
+    </main>
     <custom-footer></custom-footer>
     <script>
-      const index = document.getElementById("index");
+      const container = document.getElementById("container");
 
       async function render() {
-        const data = await fetch("./index.json").then((r) => r.json());
+        const res = await fetch("./index.json");
 
-        index.innerHTML = data
-          .reverse()
-          .map(({ title, id }) => {
-            const [year, month, date] = id
-              .substring(0, 10)
-              .split("-")
-              .map((i) => Number(i));
+        // Estado de error
+        if (!res.ok) {
+          container.innerHTML =
+            "Ocurrión un error al consultar las publicaciones.";
+          return;
+        }
 
-            return `<li><a href="./publicaciones/#/${id}">${title}</a> - ${new Date(
-              year,
-              month - 1,
-              date
-            ).toLocaleString("es-MX", { dateStyle: "full" })}</li>`;
-          })
-          .join("");
+        const data = await res.json();
+
+        container.innerHTML = data.length
+          ? // Estado lleno (completado con datos)
+            `<ul>${data
+
+              .reverse()
+              .map(({ title, id }) => {
+                const [year, month, date] = id
+                  .substring(0, 10)
+                  .split("-")
+                  .map((i) => Number(i));
+
+                return `<li><a href="./publicaciones/#/${id}">${title}</a> - ${new Date(
+                  year,
+                  month - 1,
+                  date
+                ).toLocaleString("es-MX", { dateStyle: "full" })}</li>`;
+              })
+              .join("")}</ul`
+          : // Estado vacío (completado sin datos)
+            "No hay publicaciones para mostrar.";
       }
 
       render();
