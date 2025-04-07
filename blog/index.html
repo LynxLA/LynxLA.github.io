@@ -23,7 +23,7 @@
         // Estado de error
         if (!res.ok) {
           container.innerHTML =
-            "Ocurrión un error al consultar las publicaciones.";
+            "Ocurrió un error al consultar las publicaciones.";
           return;
         }
 
@@ -32,7 +32,6 @@
         container.innerHTML = data.length
           ? // Estado lleno (completado con datos)
             `<ul>${data
-
               .reverse()
               .map(({ title, id }) => {
                 const [year, month, date] = id
